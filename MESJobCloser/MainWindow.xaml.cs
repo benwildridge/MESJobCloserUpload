@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Oracle.ManagedDataAccess.Client;
+using System.Configuration;
 
 namespace MESJobCloser
 {
@@ -20,6 +22,8 @@ namespace MESJobCloser
     /// </summary>
     public partial class MainWindow : Window
     {
+        OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["dev"].ConnectionString);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +33,15 @@ namespace MESJobCloser
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            con.Open();
+
+            MessageBox.Show("Connected");
+
+            con.Close();
         }
     }
 }

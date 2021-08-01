@@ -79,7 +79,7 @@
                     Background="black"
                     Opacity="0.5"/>
                 <StackPanel Orientation="Horizontal" Margin="0,40,0,0" HorizontalAlignment="Center">
-                    <Button Width="100" Height="40" Content="Login"/>
+                    <Button Width="100" Height="40" Content="Login" Click="Button_Click"/>
                 </StackPanel>
 
             </StackPanel>
