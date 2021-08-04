@@ -8,7 +8,8 @@
         Title="MainWindow" Height="450" Width="380"
         AllowsTransparency="True" Background="Transparent"
         WindowStyle="None" ResizeMode="NoResize"
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -35,7 +36,7 @@
             
             <StackPanel Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBox FontFamily="Helvetica"
+                    <TextBox x:Name="txtUsername" FontFamily="Helvetica"
                          FontWeight="Light"
                          Text="Username"
                          FontSize="20"
@@ -46,7 +47,7 @@
                          HorizontalContentAlignment="Left"
                          Opacity="0.5"
                          Height="25"
-                         Margin="63, 0, 0, 0"/>
+                         Margin="63, 0, 0, 0" GotFocus="txtUserEnter" LostFocus="txtUserLeave"/>
                     <iconPacks:PackIconMaterial Kind="Account"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center" />
@@ -57,7 +58,7 @@
                     Background="black"
                     Opacity="0.5"/>
                 <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                    <PasswordBox FontFamily="Helvetica"
+                    <PasswordBox x:Name="txtPassword" FontFamily="Helvetica"
                          FontWeight="Light"
                          Password="Password"
                          FontSize="20"
@@ -68,7 +69,7 @@
                          HorizontalContentAlignment="Left"
                          Opacity="0.5"
                          Height="25"
-                         Margin="63, 0, 0, 0"/>
+                         Margin="63, 0, 0, 0" GotFocus="txtPassEnter" LostFocus="txtPassLeave"/>
                     <iconPacks:PackIconMaterial Kind="FormTextboxPassword"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center" />
@@ -79,7 +80,8 @@
                     Background="black"
                     Opacity="0.5"/>
                 <StackPanel Orientation="Horizontal" Margin="0,40,0,0" HorizontalAlignment="Center">
-                    <Button Width="100" Height="40" Content="Login" Click="Button_Click"/>
+                    <Button x:Name="btnLogin" Margin="0,0,40,0" Width="100" Height="40" Content="Login" IsDefault="True" Click="Button_Click"/>
+                    <Button x:Name="btnExit" Width="100" Height="40" Content="Exit" IsCancel="True" Click="BtnExit_Click"/>
                 </StackPanel>
 
             </StackPanel>
