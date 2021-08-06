@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>howdens_logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.8.0\lib\net47\MahApps.Metro.IconPacks.Core.dll</HintPath>
@@ -119,6 +122,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Howdens-2019-Logo-Black-Mono-Horizontal_CMYK.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="full_rooster_logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="howdens_logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\howdens_logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
