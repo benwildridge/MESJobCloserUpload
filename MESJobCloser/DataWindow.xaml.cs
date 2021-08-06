@@ -83,7 +83,10 @@ namespace MESJobCloser
                 MessageBox.Show("No Order Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else {
-            con.Open();
+            if(con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }else
             com = con.CreateCommand();
             com.CommandText = sql_stmt;
             com.CommandType = CommandType.Text;
