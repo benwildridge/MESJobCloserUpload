@@ -23,13 +23,13 @@ namespace MESJobCloser
     /// </summary>
     public partial class MainWindow : Window
     {
-        OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["dev"].ConnectionString);
         OracleCommand com = new OracleCommand();
-        
-
+        OracleConnection con = new OracleConnection();
         public MainWindow()
         {
             InitializeComponent();
+            var dataAccesCon = new DataAccess();
+            con = dataAccesCon.SetConnectionString();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -40,22 +40,33 @@ namespace MESJobCloser
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Checks the username/password exists in the database, handled case sensitivity issues on the username
             string Username = txtUsername.Text.Trim();
             string Password = txtPassword.Password.Trim();
+            if (con == null)
+            {
+                MessageBox.Show("Connection value incorrect. Connection could not be established", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+            else
+
             con.Open();
             com.Connection = con;
             var oracleQuery = $"Select * from TBLCONSOLEUSER WHERE UPPER(USERNAME)='{Username.ToUpper()}' AND PASSWORD='{Password}'";
-            var test = new OracleCommand(oracleQuery,con);
-            
-            
-            try { OracleDataReader dr = test.ExecuteReader(); 
-                if(dr.HasRows)
+            var oracleCom = new OracleCommand(oracleQuery, con);
+
+
+            try
+            {
+                OracleDataReader dr = oracleCom.ExecuteReader();
+                if (dr.HasRows)
                 {
                     MessageBox.Show("Login Successful", "Congratulations", MessageBoxButton.OK, MessageBoxImage.Information);
                     DataWindow dataDisplay = new DataWindow();
                     dataDisplay.Show();
                     this.Close();
-                    
+                    con.Close();
+
                 }
                 else
                 {
@@ -67,7 +78,8 @@ namespace MESJobCloser
         }
 
 
-
+        // below is logic to remove the default text from the username/password field when they are entered
+        // also adds it back in if no input was given
 
         private void txtUserEnter(object sender, RoutedEventArgs e)
         {
@@ -103,8 +115,15 @@ namespace MESJobCloser
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            con.Close();
+            //closes the connection and closes the application
+            if (con == null)
+            {
+                this.Close();
+            }
+            else
+                con.Close();
             this.Close();
+
         }
     }
 }

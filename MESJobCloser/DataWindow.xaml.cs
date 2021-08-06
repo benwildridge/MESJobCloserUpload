@@ -23,23 +23,31 @@ namespace MESJobCloser
     public partial class DataWindow : Window
     {
 
-        OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["dev"].ConnectionString);
+        OracleConnection con = new OracleConnection();
+        //Creates the connection to Oracle
+        //Opens new oracle command
         OracleCommand com = new OracleCommand();
 
         public string productionOrder = "";
 
         public DataWindow()
         {
+
             InitializeComponent();
+            var dataAccesCon = new DataAccess();
+            con = dataAccesCon.SetConnectionString();
+            //Pulls the initial data into the grid when the window opens
             RetrieveDataGrid();
         }
 
         public DataTable RetrieveDataGrid()
+            // Pulls the initial data into the grid for on job load and puts it in a table to present to the user
+            // Returns the datatable to be used in the request method
         {
             con.Close();
             con.Open();
             com = con.CreateCommand();
-            com.CommandText = "SELECT PONUMBER, WORKCENTRE, MATERIAL, MATERIALDESCRIPTION, QTYREQUIRED FROM TBLPRODUCTIONLIST WHERE STATUSID ='2' AND WORKCENTRE = 'PACKAUT1'";
+            com.CommandText = "SELECT PONUMBER, WORKCENTRE, MATERIAL, QTYREQUIRED FROM TBLPRODUCTIONLIST WHERE STATUSID ='2' AND WORKCENTRE = 'PACKAUT1'";
             com.CommandType = System.Data.CommandType.Text;
             OracleDataReader dr = com.ExecuteReader();
             DataTable dt = new DataTable();
@@ -47,9 +55,13 @@ namespace MESJobCloser
             gridOracleData.ItemsSource = dt.DefaultView;
             dr.Close();
             return dt;
+            
         }
 
         private void RequestDataGridUpdate()
+
+            //Returns the data grid via the button to pull the data, produces an error if no records are found
+
         {
             var productionOrderTable = RetrieveDataGrid();
             
@@ -57,11 +69,12 @@ namespace MESJobCloser
             {
                 MessageBox.Show("No active order found for PACKAUT1", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
+            con.Close();
         }
 
         private void UpdateJobStatus(String sql_stmt)
         {
+            // Changes the status of the order to status 4 and commits it to the database, then refreshes the grid data to reflect
             
             String msg = "Order Successfully Finished. Refresh MES Screen.";
 
@@ -69,8 +82,8 @@ namespace MESJobCloser
             {
                 MessageBox.Show("No Order Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else { 
-
+            else {
+            con.Open();
             com = con.CreateCommand();
             com.CommandText = sql_stmt;
             com.CommandType = CommandType.Text;
@@ -78,6 +91,7 @@ namespace MESJobCloser
             MessageBox.Show(msg, "Update Complete", MessageBoxButton.OK, MessageBoxImage.Information);
             RetrieveDataGrid();
             }
+            
         }
 
 
@@ -89,24 +103,33 @@ namespace MESJobCloser
 
         private void RetrieveData_Click(object sender, RoutedEventArgs e)
         {
+            //retrieves the data manually via button on screen
+
             this.RequestDataGridUpdate();
+            con.Close();
         }
 
         private void BntLogout_Click(object sender, RoutedEventArgs e)
         {
+            //closes connection to the DB and closes the application down
             con.Close();
             this.Close();
         }
 
         private void FinishOrder_Click(object sender, RoutedEventArgs e)
         {
+            // calls method to change the status of the order to status 4 and commits it to the database, then refreshes the grid data to reflect
+
             String sql = $"UPDATE TBLPRODUCTIONLIST SET STATUSID = '4' WHERE STATUSID = '2' AND WORKCENTRE = 'PACKAUT1' AND PONUMBER = '{productionOrder}'";
             this.UpdateJobStatus(sql);
             con.Close();
+
         }
 
         private void gridOracleData_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //pulls out the production order to pass into the status change method, this ensure we only close a production order that has been selected by the user
+
             DataGrid dg = sender as DataGrid;
             DataRowView dr = dg.SelectedItem as DataRowView;
             if (dr != null)
