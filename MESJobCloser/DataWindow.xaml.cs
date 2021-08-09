@@ -76,7 +76,7 @@ namespace MESJobCloser
         {
             // Changes the status of the order to status 4 and commits it to the database, then refreshes the grid data to reflect
             
-            String msg = "Order Successfully Finished. Refresh MES Screen.";
+            String msg = "Order Successfully Finished. Please Restart MES";
 
             if(productionOrder == "")
             {
@@ -93,6 +93,7 @@ namespace MESJobCloser
             com.ExecuteNonQuery();
             MessageBox.Show(msg, "Update Complete", MessageBoxButton.OK, MessageBoxImage.Information);
             RetrieveDataGrid();
+            productionOrder = "";
             }
             
         }
@@ -116,7 +117,9 @@ namespace MESJobCloser
         {
             //closes connection to the DB and closes the application down
             con.Close();
+            MainWindow logonDisplay = new MainWindow();
             this.Close();
+            logonDisplay.Show();
         }
 
         private void FinishOrder_Click(object sender, RoutedEventArgs e)
